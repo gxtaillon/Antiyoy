@@ -85,4 +85,6 @@ public abstract class ReactBehavior {
     public static final RbShowColorStats rbShowColorStats = new RbShowColorStats();
     public static final RbHideColorStats rbHideColorStats = new RbHideColorStats();
     public static final RbNextLevel rbNextLevel = new RbNextLevel();
+    public static final RbInterfaceSettings rbInterfaceSettings = new RbInterfaceSettings();
+    public static final RbHideEndTurnConfirm rbHideEndTurnConfirm = new RbHideEndTurnConfirm();
 }

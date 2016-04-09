@@ -228,7 +228,7 @@ public class ButtonLighty {
     public void destroy() {
         setTouchable(false);
         factorModel.setDy(0);
-        factorModel.beginDestroying(2, 1.5);
+        factorModel.beginDestroying(MenuControllerLighty.DESTROY_ANIM, MenuControllerLighty.DESTROY_SPEED);
     }
 
 

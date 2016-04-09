@@ -152,7 +152,7 @@ class MenuViewLighty {
         batch.begin();
         for (ButtonLighty buttonLighty : buttons) {
             if (buttonLighty.isVisible() &&
-                    !buttonLighty.currentlyTouched &&
+//                    !buttonLighty.currentlyTouched &&
                     buttonLighty.hasShadow &&
                     !buttonLighty.mandatoryShadow &&
                     buttonLighty.factorModel.get() > 0.1 &&
@@ -349,7 +349,7 @@ class MenuViewLighty {
             GameView.drawFromCenter(batch, yioGdxGame.gameView.blackCircleTexture, slider.getSegmentLeftSidePos(i), slider.currentVerticalPos, slider.getSegmentCenterSize(i));
         }
         GameView.drawFromCenter(batch, yioGdxGame.gameView.blackCircleTexture, slider.getViewX() + slider.runnerValue * slider.getViewWidth(), slider.currentVerticalPos, slider.circleSize);
-        if (slider.appearFactor.getGravity() >= 0)
+        if (slider.textVisible())
             YioGdxGame.gameFont.draw(batch, slider.getValueString(), slider.getViewX() + slider.getViewWidth() - slider.textWidth, slider.currentVerticalPos + 0.05f * h);
         batch.end();
     }

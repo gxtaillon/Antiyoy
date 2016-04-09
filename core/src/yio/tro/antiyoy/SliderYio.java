@@ -16,15 +16,16 @@ class SliderYio {
     FactorYio appearFactor;
     FactorYio sizeFactor;
     boolean fromUp, isCurrentlyPressed;
-    int numberOfSegments, configureType, minNumber;
+    int numberOfSegments, configureType, minNumber, index;
     public static final int CONFIGURE_SIZE = 0;
     public static final int CONFIGURE_HUMANS = 1;
     public static final int CONFIGURE_COLORS = 2;
     public static final int CONFIGURE_DIFFICULTY = 3;
-    public static final int CONFIGURE_SOUND = 4;
+    public static final int CONFIGURE_ON_OFF = 4;
     public static final int CONFIGURE_SKIN = 5;
     public static final int CONFIGURE_SLOT_NUMBER = 6;
-    public static final int CONFIGURE_AUTOSAVE = 7;
+    public static final int CONFIGURE_ASK_END_TURN = 7;
+    public static final int CONFIGURE_ANIM_STYLE = 8;
     Rect pos;
     String valueString;
     ArrayList<SliderYio> listeners;
@@ -171,6 +172,13 @@ class SliderYio {
     }
 
 
+    public boolean textVisible() {
+        if (appearFactor.get() > 0.5 && index > 3) return true;
+        if (appearFactor.getGravity() >= 0) return true;
+        return false;
+    }
+
+
     public float getViewX() {
         return viewX;
     }
@@ -220,83 +228,153 @@ class SliderYio {
         switch (configureType) {
             default:
             case CONFIGURE_HUMANS:
-                if (getCurrentRunnerIndex() + minNumber <= 1)
-                    valueString = (getCurrentRunnerIndex() + minNumber) + " " + languagesManager.getString("human1");
-                else if (getCurrentRunnerIndex() + minNumber <= 4)
-                    valueString = (getCurrentRunnerIndex() + minNumber) + " " + languagesManager.getString("human2");
-                else
-                    valueString = (getCurrentRunnerIndex() + minNumber) + " " + languagesManager.getString("human3");
+                configureHumans(languagesManager);
                 break;
             case CONFIGURE_COLORS:
-                if (getCurrentRunnerIndex() + minNumber <= 4)
-                    valueString = (getCurrentRunnerIndex() + minNumber) + " " + languagesManager.getString("color");
-                else
-                    valueString = (getCurrentRunnerIndex() + minNumber) + " " + languagesManager.getString("colors");
+                configureColors(languagesManager);
                 break;
             case CONFIGURE_SIZE:
-                int size = getCurrentRunnerIndex();
-                switch (size) {
-                    default:
-                    case 0:
-                        valueString = languagesManager.getString("small");
-                        break;
-                    case 1:
-                        valueString = languagesManager.getString("medium");
-                        break;
-                    case 2:
-                        valueString = languagesManager.getString("big");
-                        break;
-                }
+                configureSize(languagesManager);
                 break;
             case CONFIGURE_DIFFICULTY:
-                switch (getCurrentRunnerIndex()) {
-                    case 0:
-                        valueString = languagesManager.getString("easy");
-                        break;
-                    case 1:
-                        valueString = languagesManager.getString("normal");
-                        break;
-                    case 2:
-                        valueString = languagesManager.getString("hard");
-                        break;
-                    case 3:
-                        valueString = languagesManager.getString("expert");
-                        break;
-                }
+                configureDifficulty(languagesManager);
                 break;
-            case CONFIGURE_AUTOSAVE:
-            case CONFIGURE_SOUND:
-                if (getCurrentRunnerIndex() == 0)
-                    valueString = languagesManager.getString("off");
-                else
-                    valueString = languagesManager.getString("on");
+            case CONFIGURE_ON_OFF:
+                configureOnOff(languagesManager);
                 break;
             case CONFIGURE_SKIN:
-                switch (getCurrentRunnerIndex()) {
-                    case 0:
-                        valueString = languagesManager.getString("original");
-                        break;
-                    case 1:
-                        valueString = languagesManager.getString("points");
-                        break;
-                    case 2:
-                        valueString = languagesManager.getString("grid");
-                        break;
-                }
+                configureSkin(languagesManager);
                 break;
             case CONFIGURE_SLOT_NUMBER:
-                switch (getCurrentRunnerIndex()) {
-                    case 0:
-                        valueString = languagesManager.getString("interface_simple");
-                        break;
-                    case 1:
-                        valueString = languagesManager.getString("interface_complicated");
-                        break;
-                }
+                configureSlotNumber(languagesManager);
+                break;
+            case CONFIGURE_ASK_END_TURN:
+                configureAskToEndTurn(languagesManager);
+                break;
+            case CONFIGURE_ANIM_STYLE:
+                configureAnimStyle();
                 break;
         }
         textWidth = YioGdxGame.gameFont.getBounds(valueString).width;
         notifyListeners();
+    }
+
+
+    private void configureAnimStyle() {
+        switch (getCurrentRunnerIndex()) {
+            case 0:
+                valueString = "simple";
+                break;
+            case 1:
+                valueString = "lighty";
+                break;
+            case 2:
+                valueString = "material";
+                break;
+            case 3:
+                valueString = "playful";
+                break;
+        }
+    }
+
+
+    private void configureAskToEndTurn(LanguagesManager languagesManager) {
+        switch (getCurrentRunnerIndex()) {
+            case 0:
+                valueString = languagesManager.getString("do_not_ask");
+                break;
+            case 1:
+                valueString = languagesManager.getString("ask");
+                break;
+        }
+    }
+
+
+    private void configureSlotNumber(LanguagesManager languagesManager) {
+        switch (getCurrentRunnerIndex()) {
+            case 0:
+                valueString = languagesManager.getString("slot_single");
+                break;
+            case 1:
+                valueString = languagesManager.getString("slot_multiple");
+                break;
+        }
+    }
+
+
+    private void configureSkin(LanguagesManager languagesManager) {
+        switch (getCurrentRunnerIndex()) {
+            case 0:
+                valueString = languagesManager.getString("original");
+                break;
+            case 1:
+                valueString = languagesManager.getString("points");
+                break;
+            case 2:
+                valueString = languagesManager.getString("grid");
+                break;
+        }
+    }
+
+
+    private void configureOnOff(LanguagesManager languagesManager) {
+        if (getCurrentRunnerIndex() == 0)
+            valueString = languagesManager.getString("off");
+        else
+            valueString = languagesManager.getString("on");
+    }
+
+
+    private void configureDifficulty(LanguagesManager languagesManager) {
+        switch (getCurrentRunnerIndex()) {
+            case 0:
+                valueString = languagesManager.getString("easy");
+                break;
+            case 1:
+                valueString = languagesManager.getString("normal");
+                break;
+            case 2:
+                valueString = languagesManager.getString("hard");
+                break;
+            case 3:
+                valueString = languagesManager.getString("expert");
+                break;
+        }
+    }
+
+
+    private void configureSize(LanguagesManager languagesManager) {
+        int size = getCurrentRunnerIndex();
+        switch (size) {
+            default:
+            case 0:
+                valueString = languagesManager.getString("small");
+                break;
+            case 1:
+                valueString = languagesManager.getString("medium");
+                break;
+            case 2:
+                valueString = languagesManager.getString("big");
+                break;
+        }
+    }
+
+
+    private void configureColors(LanguagesManager languagesManager) {
+        if (getCurrentRunnerIndex() + minNumber <= 4)
+            valueString = (getCurrentRunnerIndex() + minNumber) + " " + languagesManager.getString("color");
+        else
+            valueString = (getCurrentRunnerIndex() + minNumber) + " " + languagesManager.getString("colors");
+    }
+
+
+    private void configureHumans(LanguagesManager languagesManager) {
+        if (getCurrentRunnerIndex() + minNumber <= 1)
+            valueString = (getCurrentRunnerIndex() + minNumber) + " " + languagesManager.getString("human1");
+        else if (getCurrentRunnerIndex() + minNumber <= 4)
+            valueString = (getCurrentRunnerIndex() + minNumber) + " " + languagesManager.getString("human2");
+        else
+            valueString = (getCurrentRunnerIndex() + minNumber) + " " + languagesManager.getString("human3");
     }
 
 

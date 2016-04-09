@@ -10,14 +10,10 @@ public class RbRestartGame extends ReactBehavior {
 
     @Override
     public void reactAction(ButtonLighty buttonLighty) {
-        if (YioGdxGame.interface_type == YioGdxGame.INTERFACE_SIMPLE) {
+        if (buttonLighty.id == 221) { // restart game confirmed
             getYioGdxGame(buttonLighty).restartGame();
         } else {
-            if (buttonLighty.id == 221) { // restart game confirmed
-                getYioGdxGame(buttonLighty).restartGame();
-            } else {
-                buttonLighty.menuControllerLighty.createConfirmRestartMenu();
-            }
+            buttonLighty.menuControllerLighty.createConfirmRestartMenu();
         }
     }
 }

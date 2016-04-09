@@ -444,7 +444,7 @@ public class GameView {
 
     public void beginSpawnProcess() {
         factorModel.setValues(0.02, 0);
-        factorModel.beginSpawning(2, 1.5); // 3, 0.8
+        factorModel.beginSpawning(2, 1.3); // 3, 0.8
         updateAnimationTexture();
     }
 

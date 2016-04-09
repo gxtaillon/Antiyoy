@@ -29,6 +29,7 @@ public class YioGdxGame extends ApplicationAdapter implements InputProcessor {
     public static final boolean CHECKING_BALANCE_MODE = false; // to measure balance
     public static boolean SOUND = true;
     public static int interface_type = 0;
+    public static boolean ask_to_end_turn = false;
     public static final int INTERFACE_SIMPLE = 0;
     public static final int INTERFACE_COMPLICATED = 1;
     public static boolean autosave;
@@ -189,8 +190,10 @@ public class YioGdxGame extends ApplicationAdapter implements InputProcessor {
         Preferences prefs = Gdx.app.getPreferences("settings");
         prefs.putInteger("sound", menuControllerLighty.sliders.get(4).getCurrentRunnerIndex());
         prefs.putInteger("skin", menuControllerLighty.sliders.get(5).getCurrentRunnerIndex());
-        prefs.putInteger("interface", menuControllerLighty.sliders.get(6).getCurrentRunnerIndex());
+        prefs.putInteger("interface", menuControllerLighty.sliders.get(6).getCurrentRunnerIndex()); // slot number
         prefs.putInteger("autosave", menuControllerLighty.sliders.get(7).getCurrentRunnerIndex());
+        prefs.putInteger("ask_to_end_turn", menuControllerLighty.sliders.get(8).getCurrentRunnerIndex());
+        prefs.putInteger("anim_style", menuControllerLighty.sliders.get(9).getCurrentRunnerIndex());
         prefs.flush();
     }
 
@@ -216,7 +219,15 @@ public class YioGdxGame extends ApplicationAdapter implements InputProcessor {
         if (AS == 1) autosave = true;
         menuControllerLighty.sliders.get(7).setRunnerValue(AS);
 
-        for (int i = 4; i <= 7; i++) {
+        menuControllerLighty.anim_style = prefs.getInteger("anim_style", 2);
+        menuControllerLighty.sliders.get(9).setRunnerValue(MenuControllerLighty.anim_style / 3f);
+        menuControllerLighty.applyAnimStyle();
+
+        int ATET = prefs.getInteger("ask_to_end_turn");
+        ask_to_end_turn = (ATET == 1);
+        menuControllerLighty.sliders.get(8).setRunnerValue(ATET);
+
+        for (int i = 4; i <= 9; i++) {
             menuControllerLighty.sliders.get(i).updateValueString();
         }
     }

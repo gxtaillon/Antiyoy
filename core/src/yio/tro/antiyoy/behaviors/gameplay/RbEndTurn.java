@@ -1,6 +1,7 @@
 package yio.tro.antiyoy.behaviors.gameplay;
 
 import yio.tro.antiyoy.ButtonLighty;
+import yio.tro.antiyoy.YioGdxGame;
 import yio.tro.antiyoy.behaviors.ReactBehavior;
 
 /**
@@ -10,6 +11,16 @@ public class RbEndTurn extends ReactBehavior {
 
     @Override
     public void reactAction(ButtonLighty buttonLighty) {
-        getGameController(buttonLighty).endTurnButtonPressed();
+        if (YioGdxGame.ask_to_end_turn) {
+            if (buttonLighty.id == 321) {
+                buttonLighty.menuControllerLighty.hideConfirmEndTurnMenu();
+                getGameController(buttonLighty).endTurnButtonPressed();
+            } else {
+                buttonLighty.menuControllerLighty.createConfirmEndTurnMenu();
+            }
+        } else {
+            buttonLighty.menuControllerLighty.hideConfirmEndTurnMenu();
+            getGameController(buttonLighty).endTurnButtonPressed();
+        }
     }
 }

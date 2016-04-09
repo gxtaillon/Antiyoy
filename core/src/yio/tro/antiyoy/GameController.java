@@ -719,9 +719,8 @@ public class GameController {
         camDx = 0;
         camDy = 0;
         currentTouchCount = 0;
-        if (isPlayerTurn()) {
-            readyToEndTurn = true;
-        }
+        if (!isPlayerTurn()) return;
+        readyToEndTurn = true;
     }
 
 

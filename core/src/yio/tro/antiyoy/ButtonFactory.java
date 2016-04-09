@@ -26,7 +26,7 @@ class ButtonFactory {
         }
         buttonLighty.setVisible(true);
         buttonLighty.setTouchable(true);
-        buttonLighty.factorModel.beginSpawning(2, 1.5);
+        buttonLighty.factorModel.beginSpawning(MenuControllerLighty.SPAWN_ANIM, MenuControllerLighty.SPAWN_SPEED);
         buttonLighty.factorModel.setValues(0, 0.001);
         buttonLighty.touchAnimation = true;
         return buttonLighty;
