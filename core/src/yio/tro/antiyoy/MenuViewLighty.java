@@ -344,13 +344,13 @@ class MenuViewLighty {
 
     private void renderSlider(SliderYio slider) {
         batch.begin();
-        batch.draw(yioGdxGame.gameView.blackPixel, slider.pos.x, slider.currentVerticalPos - 0.0025f * h, slider.pos.width, 0.005f * h);
+        batch.draw(yioGdxGame.gameView.blackPixel, slider.getViewX(), slider.currentVerticalPos - 0.0025f * h, slider.getViewWidth(), 0.005f * h);
         for (int i = 0; i < slider.numberOfSegments + 1; i++) {
             GameView.drawFromCenter(batch, yioGdxGame.gameView.blackCircleTexture, slider.getSegmentLeftSidePos(i), slider.currentVerticalPos, slider.getSegmentCenterSize(i));
         }
-        GameView.drawFromCenter(batch, yioGdxGame.gameView.blackCircleTexture, slider.pos.x + slider.runnerValue * slider.pos.width, slider.currentVerticalPos, slider.circleSize);
+        GameView.drawFromCenter(batch, yioGdxGame.gameView.blackCircleTexture, slider.getViewX() + slider.runnerValue * slider.getViewWidth(), slider.currentVerticalPos, slider.circleSize);
         if (slider.appearFactor.getGravity() >= 0)
-            YioGdxGame.gameFont.draw(batch, slider.getValueString(), slider.pos.x + slider.pos.width - slider.textWidth, slider.currentVerticalPos + 0.05f * h);
+            YioGdxGame.gameFont.draw(batch, slider.getValueString(), slider.getViewX() + slider.getViewWidth() - slider.textWidth, slider.currentVerticalPos + 0.05f * h);
         batch.end();
     }
 

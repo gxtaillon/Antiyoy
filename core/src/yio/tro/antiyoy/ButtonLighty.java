@@ -228,7 +228,7 @@ public class ButtonLighty {
     public void destroy() {
         setTouchable(false);
         factorModel.setDy(0);
-        factorModel.beginDestroying(0, 1);
+        factorModel.beginDestroying(2, 1.5);
     }
 
 

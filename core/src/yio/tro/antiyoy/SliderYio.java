@@ -12,7 +12,7 @@ class SliderYio {
 
     private final MenuControllerLighty menuControllerLighty;
     float runnerValue, currentVerticalPos, circleSize, segmentSize, textWidth;
-    float viewMagnifier, circleDefaultSize, verticalTouchOffset;
+    float viewMagnifier, circleDefaultSize, verticalTouchOffset, viewX, viewWidth;
     FactorYio appearFactor;
     FactorYio sizeFactor;
     boolean fromUp, isCurrentlyPressed;
@@ -110,7 +110,11 @@ class SliderYio {
 
 
     void move() {
-        if (appearFactor.needsToMove()) appearFactor.move();
+        if (appearFactor.needsToMove()) {
+            appearFactor.move();
+            viewWidth = pos.width * appearFactor.get();
+            viewX = pos.x + 0.5f * pos.width - 0.5f * viewWidth;
+        }
         if (sizeFactor.needsToMove()) sizeFactor.move();
         circleSize = circleDefaultSize + 0.01f * Gdx.graphics.getHeight() * sizeFactor.get();
         if (fromUp) {
@@ -162,8 +166,32 @@ class SliderYio {
     }
 
 
+    public void appear() {
+        appearFactor.beginSpawning(2, 1.5);
+    }
+
+
+    public float getViewX() {
+        return viewX;
+    }
+
+
+    public float getViewWidth() {
+        return viewWidth;
+    }
+
+
     private void beNotifiedAboutChange(SliderYio sliderYio) {
-        int s = sliderYio.getCurrentRunnerIndex() + sliderYio.minNumber;
+        int s = 0;
+        switch (sliderYio.configureType) {
+            case CONFIGURE_COLORS:
+                s = sliderYio.getCurrentRunnerIndex() + sliderYio.minNumber;
+                break;
+            case CONFIGURE_SIZE:
+                s = GameController.MAX_COLOR_NUMBER - 3;
+                if (sliderYio.getCurrentRunnerIndex() == 0) s = 2;
+                break;
+        }
         setNumberOfSegments(s);
         updateValueString();
     }

@@ -7,7 +7,7 @@ abstract class MoveBehavior {
 
     static final MoveBehavior moveBehaviorSimple = new MoveBehaviorSimple();
     static final MoveBehavior moveBehaviorLighty = new MoveBehaviorLighty();
-    static final MoveBehavior moveBehaviorSpringy = new MoveBehaviorSpringy();
+    static final MoveBehavior moveBehaviorMaterial = new MoveBehaviorMaterial();
     static final MoveBehavior moveBehaviorApproach = new MoveBehaviorApproach();
     static final MoveBehavior moveBehaviorPlayful = new MoveBehaviorPlayful();
 
@@ -19,10 +19,12 @@ abstract class MoveBehavior {
     boolean needsToMove(FactorYio fy) {
         if (fy.gravity > 0 && fy.f < 1) return true;
         if (fy.gravity < 0 && fy.f > 0) return true;
+
         if (fy.gravity == 0) {
             if (fy.dy > 0 && fy.f < 1) return true;
             if (fy.dy < 0 && fy.f > 0) return true;
         }
+
         return false;
     }
 

@@ -21,6 +21,7 @@ public class RbShowColorStats extends ReactBehavior {
     private SpriteBatch batch;
     private SimpleRectangle pos;
     TextureRegion buttonBackground, greenPixel, redPixel, bluePixel, cyanPixel, yellowPixel, blackPixel;
+    TextureRegion pixelColor1, pixelColor2, pixelColor3;
 
 
     private void initEverything() {
@@ -31,6 +32,9 @@ public class RbShowColorStats extends ReactBehavior {
         bluePixel = GameView.loadTextureRegionByName("pixels/pixel_blue.png", false);
         cyanPixel = GameView.loadTextureRegionByName("pixels/pixel_cyan.png", false);
         yellowPixel = GameView.loadTextureRegionByName("pixels/pixel_yellow.png", false);
+        pixelColor1 = GameView.loadTextureRegionByName("pixels/pixel_color1.png", false);
+        pixelColor2 = GameView.loadTextureRegionByName("pixels/pixel_color2.png", false);
+        pixelColor3 = GameView.loadTextureRegionByName("pixels/pixel_color3.png", false);
         blackPixel = GameView.loadTextureRegionByName("black_pixel.png", false);
     }
 
@@ -55,6 +59,12 @@ public class RbShowColorStats extends ReactBehavior {
                 return cyanPixel;
             case 4:
                 return yellowPixel;
+            case 5:
+                return pixelColor1;
+            case 6:
+                return pixelColor2;
+            case 7:
+                return pixelColor3;
         }
     }
 
@@ -76,6 +86,15 @@ public class RbShowColorStats extends ReactBehavior {
                 break;
             case 4:
                 font.setColor(0.7f, 0.71f, 0.39f, 1);
+                break;
+            case 5:
+                font.setColor(0.68f, 0.22f, 0, 1);
+                break;
+            case 6:
+                font.setColor(0.13f, 0.44f, 0.1f, 1);
+                break;
+            case 7:
+                font.setColor(0.4f, 0.4f, 0.4f, 1);
                 break;
         }
     }

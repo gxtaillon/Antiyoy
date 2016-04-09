@@ -26,7 +26,7 @@ public class GameView {
     float cx, cy, dw, dh, borderLineThickness;
     TextureRegion blackCircleTexture, redRectTexture, exclamationMarkTexture, forefingerTexture;
     TextureRegion animationTextureRegion, blackBorderTexture;
-    TextureRegion hexGreen, hexRed, hexBlue, hexYellow, hexCyan;
+    TextureRegion hexGreen, hexRed, hexBlue, hexYellow, hexCyan, hexColor1, hexColor2, hexColor3;
     float linkLineThickness, hexViewSize, cacheFrameX1, cacheFrameY1, cacheFrameX2, cacheFrameY2, hexShadowSize;
     TextureRegion blackPixel, grayPixel, selectionPixel, shadowHexTexture, gradientShadow, transCircle1, transCircle2, selUnitShadow, currentObjectTexture;
     Storage3xTexture manTextures[], palmTexture, houseTexture, towerTexture, graveTexture, pineTexture;
@@ -129,6 +129,9 @@ public class GameView {
         hexBlue = loadTextureRegionByName("hex_blue.png", false);
         hexCyan = loadTextureRegionByName("hex_cyan.png", false);
         hexYellow = loadTextureRegionByName("hex_yellow.png", false);
+        hexColor1 = loadTextureRegionByName("hex_color1.png", false);
+        hexColor2 = loadTextureRegionByName("hex_color2.png", false);
+        hexColor3 = loadTextureRegionByName("hex_color3.png", false);
     }
 
 
@@ -138,6 +141,9 @@ public class GameView {
         hexBlue = loadTextureRegionByName("skins/points_hex_blue.png", false);
         hexCyan = loadTextureRegionByName("skins/points_hex_cyan.png", false);
         hexYellow = loadTextureRegionByName("skins/points_hex_yellow.png", false);
+        hexColor1 = loadTextureRegionByName("skins/points_hex_color1.png", false);
+        hexColor2 = loadTextureRegionByName("skins/points_hex_color2.png", false);
+        hexColor3 = loadTextureRegionByName("skins/points_hex_color3.png", false);
     }
 
 
@@ -147,6 +153,9 @@ public class GameView {
         hexBlue = loadTextureRegionByName("skins/hex_blue_grid.png", false);
         hexCyan = loadTextureRegionByName("skins/hex_cyan_grid.png", false);
         hexYellow = loadTextureRegionByName("skins/hex_yellow_grid.png", false);
+        hexColor1 = loadTextureRegionByName("skins/hex_color1_grid.png", false);
+        hexColor2 = loadTextureRegionByName("skins/hex_color2_grid.png", false);
+        hexColor3 = loadTextureRegionByName("skins/hex_color3_grid.png", false);
     }
 
 
@@ -435,7 +444,7 @@ public class GameView {
 
     public void beginSpawnProcess() {
         factorModel.setValues(0.02, 0);
-        factorModel.beginSpawning(3, 0.8); // 3, 1
+        factorModel.beginSpawning(2, 1.5); // 3, 0.8
         updateAnimationTexture();
     }
 
@@ -444,7 +453,7 @@ public class GameView {
         if (yioGdxGame.gamePaused) return;
         if (factorModel.get() >= 1) {
             factorModel.setValues(1, 0);
-            factorModel.beginDestroying(1, 5);
+            factorModel.beginDestroying(2, 1.5); // 1, 5
         }
         updateAnimationTexture();
     }
@@ -494,6 +503,12 @@ public class GameView {
                 return hexCyan;
             case 4:
                 return hexYellow;
+            case 5:
+                return hexColor1;
+            case 6:
+                return hexColor2;
+            case 7:
+                return hexColor3;
         }
     }
 

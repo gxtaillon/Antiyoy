@@ -1,7 +1,5 @@
 package yio.tro.antiyoy.factor_yio;
 
-import yio.tro.antiyoy.YioGdxGame;
-
 /**
  * Created by ivan on 24.07.2015.
  */

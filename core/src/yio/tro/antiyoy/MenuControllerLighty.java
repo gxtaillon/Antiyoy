@@ -45,22 +45,28 @@ public class MenuControllerLighty {
         lockedLevelIcon = GameView.loadTextureRegionByName("locked_level_icon.png", true);
         openedLevelIcon = GameView.loadTextureRegionByName("opened_level_icon.png", true);
         initScroller();
+        initSliders();
+        notificationHolder = new NotificationHolder();
+
+        createMainMenu();
+    }
+
+
+    private void initSliders() {
         sliders = new ArrayList<SliderYio>();
         for (int i = 0; i < 8; i++) {
             sliders.add(new SliderYio(this));
         }
         sliders.get(2).addListener(sliders.get(1));
+        sliders.get(0).addListener(sliders.get(2));
         sliders.get(0).setValues(0.5f, 1, 3, true, SliderYio.CONFIGURE_SIZE);
         sliders.get(1).setValues(0.2f, 0, 5, false, SliderYio.CONFIGURE_HUMANS);
-        sliders.get(2).setValues(1, 3, 5, false, SliderYio.CONFIGURE_COLORS);
+        sliders.get(2).setValues(0.4, 3, GameController.MAX_COLOR_NUMBER, false, SliderYio.CONFIGURE_COLORS);
         sliders.get(3).setValues(0.33, 1, 4, true, SliderYio.CONFIGURE_DIFFICULTY);
         sliders.get(4).setValues(1, 0, 1, true, SliderYio.CONFIGURE_SOUND);
         sliders.get(5).setValues(0, 0, 2, true, SliderYio.CONFIGURE_SKIN);
         sliders.get(6).setValues(0, 0, 1, false, SliderYio.CONFIGURE_SLOT_NUMBER);
         sliders.get(7).setValues(0, 0, 1, false, SliderYio.CONFIGURE_AUTOSAVE);
-        notificationHolder = new NotificationHolder();
-
-        createMainMenu();
     }
 
 
@@ -176,7 +182,7 @@ public class MenuControllerLighty {
         infoPanelFactor.beginDestroying(1, 3);
         scrollerYio.factorModel.setDy(0);
         scrollerYio.factorModel.beginDestroying(0, 1);
-        for (SliderYio sliderYio : sliders) sliderYio.appearFactor.beginDestroying(3, 3);
+        for (SliderYio sliderYio : sliders) sliderYio.appearFactor.beginDestroying(2, 2);
         for (ButtonLighty buttonLighty : buttons) {
             buttonLighty.destroy();
 //            if (buttonLighty.id == 11 && buttonLighty.isVisible()) {
@@ -281,45 +287,40 @@ public class MenuControllerLighty {
         renderTextAndSomeEmptyLines(soundLabel, languagesManager.getString("sound"), 2);
         soundLabel.setTouchable(false);
         soundLabel.setAnimType(ButtonLighty.ANIM_UP);
-        soundLabel.factorModel.beginSpawning(0, 10);
 
         ButtonLighty skinLabel = buttonFactory.getButton(generateRectangle(0.1, 0.46, 0.8, 0.2), 193, null);
         renderTextAndSomeEmptyLines(skinLabel, languagesManager.getString("skin"), 2);
         skinLabel.setTouchable(false);
         skinLabel.setAnimType(ButtonLighty.ANIM_UP);
-        skinLabel.factorModel.beginSpawning(0, 10);
 
         ButtonLighty slotNumberLabel = buttonFactory.getButton(generateRectangle(0.1, 0.25, 0.8, 0.2), 194, null);
         renderTextAndSomeEmptyLines(slotNumberLabel, languagesManager.getString("interface_label"), 2);
         slotNumberLabel.setTouchable(false);
         slotNumberLabel.setAnimType(ButtonLighty.ANIM_DOWN);
-        slotNumberLabel.factorModel.beginSpawning(0, 10);
 
         ButtonLighty autosaveLabel = buttonFactory.getButton(generateRectangle(0.1, 0.04, 0.8, 0.2), 195, null);
         renderTextAndSomeEmptyLines(autosaveLabel, languagesManager.getString("autosave"), 2);
         autosaveLabel.setTouchable(false);
         autosaveLabel.setAnimType(ButtonLighty.ANIM_DOWN);
-        autosaveLabel.factorModel.beginSpawning(0, 10);
 
         ButtonLighty questionInterfaceMark = buttonFactory.getButton(generateSquare(0.9 - 0.06 / YioGdxGame.screenRatio, 0.39, 0.06), 196, null);
         loadButtonOnce(questionInterfaceMark, "question_mark.png");
         questionInterfaceMark.disableTouchAnimation();
         questionInterfaceMark.setAnimType(ButtonLighty.ANIM_DOWN);
-        questionInterfaceMark.factorModel.beginSpawning(0, 10);
         questionInterfaceMark.setReactBehavior(ReactBehavior.rbArticleComplicatedMode);
 
-        sliders.get(4).appearFactor.beginSpawning(0, 1);
+        sliders.get(4).appear();
         sliders.get(4).setPos(0.15, 0.73, 0.7, 0);
 
-        sliders.get(5).appearFactor.beginSpawning(0, 1);
+        sliders.get(5).appear();
         sliders.get(5).setPos(0.15, 0.52, 0.7, 0);
         sliders.get(5).setVerticalTouchOffset(0.06f * Gdx.graphics.getHeight());
 
-        sliders.get(6).appearFactor.beginSpawning(0, 1);
+        sliders.get(6).appear();
         sliders.get(6).setPos(0.15, 0.31, 0.7, 0);
         sliders.get(6).setVerticalTouchOffset(0.06f * Gdx.graphics.getHeight());
 
-        sliders.get(7).appearFactor.beginSpawning(0, 1);
+        sliders.get(7).appear();
         sliders.get(7).setPos(0.15, 0.1, 0.7, 0);
 
         endMenuCreation();
@@ -346,7 +347,7 @@ public class MenuControllerLighty {
 
         infoPanel.setTouchable(false);
         infoPanel.setAnimType(ButtonLighty.ANIM_FROM_CENTER);
-        infoPanel.factorModel.beginSpawning(1, 1.5);
+        infoPanel.factorModel.beginSpawning(2, 1.5);
 //        infoPanel.factorModel.setValues(-0.3, 0);
 //        infoPanel.factorModel.beginSpawning(1, 0.3);
 //        infoPanelFactor.setValues(-0.3, 0);
@@ -370,41 +371,37 @@ public class MenuControllerLighty {
 
         yioGdxGame.beginBackgroundChange(2, true, true);
 
-        sliders.get(3).appearFactor.beginSpawning(0, 1);
+        sliders.get(3).appear();
         sliders.get(3).setPos(0.15, 0.73, 0.7, 0);
 
-        sliders.get(0).appearFactor.beginSpawning(0, 1);
+        sliders.get(0).appear();
         sliders.get(0).setPos(0.15, 0.52, 0.7, 0);
 
-        sliders.get(1).appearFactor.beginSpawning(0, 1);
+        sliders.get(1).appear();
         sliders.get(1).setPos(0.15, 0.31, 0.7, 0);
 
-        sliders.get(2).appearFactor.beginSpawning(0, 1);
+        sliders.get(2).appear();
         sliders.get(2).setPos(0.15, 0.1, 0.7, 0);
 
         ButtonLighty difficultyLabel = buttonFactory.getButton(generateRectangle(0.1, 0.67, 0.8, 0.2), 88, null);
         renderTextAndSomeEmptyLines(difficultyLabel, languagesManager.getString("difficulty"), 2);
         difficultyLabel.setTouchable(false);
         difficultyLabel.setAnimType(ButtonLighty.ANIM_UP);
-        difficultyLabel.factorModel.beginSpawning(0, 10);
 
         ButtonLighty mapSizeLabel = buttonFactory.getButton(generateRectangle(0.1, 0.46, 0.8, 0.2), 81, null);
         renderTextAndSomeEmptyLines(mapSizeLabel, languagesManager.getString("map_size"), 2);
         mapSizeLabel.setTouchable(false);
         mapSizeLabel.setAnimType(ButtonLighty.ANIM_UP);
-        mapSizeLabel.factorModel.beginSpawning(0, 10);
 
         ButtonLighty playersLabel = buttonFactory.getButton(generateRectangle(0.1, 0.25, 0.8, 0.2), 84, null);
         renderTextAndSomeEmptyLines(playersLabel, languagesManager.getString("player_number"), 2);
         playersLabel.setTouchable(false);
         playersLabel.setAnimType(ButtonLighty.ANIM_DOWN);
-        playersLabel.factorModel.beginSpawning(0, 10);
 
         ButtonLighty colorsLabel = buttonFactory.getButton(generateRectangle(0.1, 0.04, 0.8, 0.2), 87, null);
         renderTextAndSomeEmptyLines(colorsLabel, languagesManager.getString("color_number"), 2);
         colorsLabel.setTouchable(false);
         colorsLabel.setAnimType(ButtonLighty.ANIM_DOWN);
-        colorsLabel.factorModel.beginSpawning(0, 10);
 
         spawnBackButton(80, ReactBehavior.rbChooseGameModeMenu);
 
@@ -492,7 +489,7 @@ public class MenuControllerLighty {
         basePanel.setTouchable(false);
 //        basePanel.onlyShadow = true;
         basePanel.setAnimType(ButtonLighty.ANIM_FROM_CENTER);
-        basePanel.factorModel.beginSpawning(1, 1.5);
+        basePanel.factorModel.beginSpawning(2, 1.5);
 
         for (int i = 0; i < 5; i++) {
             ButtonLighty slotButton = buttonFactory.getButton(generateRectangle(0.05, 0.6 - 0.1 * (double) i, 0.9, 0.1), 212 + i, null);
@@ -503,7 +500,7 @@ public class MenuControllerLighty {
             slotButton.setReactBehavior(ReactBehavior.rbSaveGameToSlot);
             slotButton.disableTouchAnimation();
             if (load) slotButton.setReactBehavior(ReactBehavior.rbLoadGameFromSlot);
-            slotButton.factorModel.beginSpawning(1, 1.5);
+            slotButton.factorModel.beginSpawning(2, 1.5);
         }
 
         endMenuCreation();
@@ -519,7 +516,7 @@ public class MenuControllerLighty {
         basePanel.setTouchable(false);
         basePanel.onlyShadow = true;
         basePanel.setAnimType(ButtonLighty.ANIM_FROM_CENTER);
-        basePanel.factorModel.beginSpawning(1, 1.5);
+        basePanel.factorModel.beginSpawning(2, 1.5);
 
         for (int i = 0; i < 8; i++) {
             ButtonLighty slotButton = buttonFactory.getButton(generateRectangle(0.05, 0.75 - 0.1 * (double) i, 0.9, 0.1), 131 + i, null);
@@ -531,7 +528,7 @@ public class MenuControllerLighty {
             slotButton.setAnimType(ButtonLighty.ANIM_FROM_CENTER);
             slotButton.setShadow(false);
             slotButton.setReactBehavior(ReactBehavior.rbEditorActionsMenu);
-            slotButton.factorModel.beginSpawning(1, 1.5);
+            slotButton.factorModel.beginSpawning(2, 1.5);
         }
 
         spawnBackButton(130, ReactBehavior.rbChooseGameModeMenu);
@@ -750,7 +747,7 @@ public class MenuControllerLighty {
 
         for (int i = 171; i <= 176; i++) {
             ButtonLighty buttonLighty = getButtonById(i);
-            buttonLighty.factorModel.beginSpawning(3, 1);
+            buttonLighty.factorModel.beginSpawning(2, 1.5);
             buttonLighty.enableRectangularMask();
             buttonLighty.disableTouchAnimation();
             buttonLighty.setAnimType(ButtonLighty.ANIM_DOWN);
@@ -807,7 +804,7 @@ public class MenuControllerLighty {
 
         for (int i = 160; i <= 168; i++) {
             ButtonLighty buttonLighty = getButtonById(i);
-            buttonLighty.factorModel.beginSpawning(3, 1);
+            buttonLighty.factorModel.beginSpawning(2, 1.5);
             buttonLighty.enableRectangularMask();
             buttonLighty.disableTouchAnimation();
             buttonLighty.setAnimType(ButtonLighty.ANIM_DOWN);
@@ -824,21 +821,28 @@ public class MenuControllerLighty {
 
 
     public void showEditorHexPanel() {
-        ButtonLighty basePanel = buttonFactory.getButton(generateRectangle(0, 0.07, 1, 0.07), 152, null);
+        ButtonLighty basePanel = buttonFactory.getButton(generateRectangle(0, 0.07, 1, 0.14), 12352, null);
         loadButtonOnce(basePanel, "gray_pixel.png");
         basePanel.setTouchable(false);
 
-        ButtonLighty cancelButton = buttonFactory.getButton(generateSquare(0, 0.07, 0.07), 150, null);
+        ButtonLighty cancelButton = buttonFactory.getButton(generateSquare(0, 0.14, 0.07), 12350, null);
         loadButtonOnce(cancelButton, "cancel_icon.png");
         cancelButton.setReactBehavior(ReactBehavior.rbInputModeDelete);
 
-        ButtonLighty hideButton = buttonFactory.getButton(generateSquare(1 - 0.07 / YioGdxGame.screenRatio, 0.07, 0.07), 151, null);
+        ButtonLighty hideButton = buttonFactory.getButton(generateSquare(1 - 0.07 / YioGdxGame.screenRatio, 0.14, 0.07), 12351, null);
         loadButtonOnce(hideButton, "hide_panel.png");
         hideButton.setReactBehavior(ReactBehavior.rbHideHexPanel);
 
         ButtonLighty hexButton;
-        for (int i = 0; i < 6; i++) {
-            hexButton = buttonFactory.getButton(generateSquare((0.07 + 0.07 * i) / YioGdxGame.screenRatio, 0.07, 0.07), 153 + i, null);
+        double curVerPos = 0.14;
+        double curHorPos = 0.07;
+        for (int i = 0; i < 9; i++) {
+            if (i == 4) {
+                curVerPos = 0.07;
+                curHorPos = 0.07;
+            }
+            hexButton = buttonFactory.getButton(generateSquare((curHorPos) / YioGdxGame.screenRatio, curVerPos, 0.07), 150 + i, null);
+            curHorPos += 0.07;
             hexButton.setReactBehavior(ReactBehavior.rbInputModeHex);
             switch (i) {
                 case 0:
@@ -857,14 +861,31 @@ public class MenuControllerLighty {
                     loadButtonOnce(hexButton, "hex_yellow.png");
                     break;
                 case 5:
+                    loadButtonOnce(hexButton, "hex_color1.png");
+                    break;
+                case 6:
+                    loadButtonOnce(hexButton, "hex_color2.png");
+                    break;
+                case 7:
+                    loadButtonOnce(hexButton, "hex_color3.png");
+                    break;
+                case 8:
                     loadButtonOnce(hexButton, "random_hex.png");
                     break;
             }
         }
 
+        for (int i = 12350; i < 12353; i++) {
+            ButtonLighty buttonLighty = getButtonById(i);
+            buttonLighty.factorModel.beginSpawning(2, 1.5);
+            buttonLighty.enableRectangularMask();
+            buttonLighty.disableTouchAnimation();
+            buttonLighty.setAnimType(ButtonLighty.ANIM_DOWN);
+        }
+
         for (int i = 150; i <= 158; i++) {
             ButtonLighty buttonLighty = getButtonById(i);
-            buttonLighty.factorModel.beginSpawning(3, 1);
+            buttonLighty.factorModel.beginSpawning(2, 1.5);
             buttonLighty.enableRectangularMask();
             buttonLighty.disableTouchAnimation();
             buttonLighty.setAnimType(ButtonLighty.ANIM_DOWN);
@@ -874,6 +895,10 @@ public class MenuControllerLighty {
 
     public void hideEditorHexPanel() {
         for (int i = 150; i <= 158; i++) {
+            ButtonLighty buttonLighty = getButtonById(i);
+            buttonLighty.destroy();
+        }
+        for (int i = 12350; i < 12353; i++) {
             ButtonLighty buttonLighty = getButtonById(i);
             buttonLighty.destroy();
         }
@@ -917,7 +942,7 @@ public class MenuControllerLighty {
 
         for (int i = 141; i <= 145; i++) {
             ButtonLighty buttonLighty = getButtonById(i);
-            buttonLighty.factorModel.beginSpawning(3, 1);
+            buttonLighty.factorModel.beginSpawning(2, 1.5);
             buttonLighty.enableRectangularMask();
             buttonLighty.disableTouchAnimation();
             buttonLighty.setAnimType(ButtonLighty.ANIM_DOWN);
@@ -1174,9 +1199,11 @@ public class MenuControllerLighty {
     private String getColorNameByIndex(int index) {
         switch (index) {
             default:
+            case 6:
             case 0:
                 return languagesManager.getString("green");
             case 1:
+            case 5:
                 return languagesManager.getString("red");
             case 2:
                 return languagesManager.getString("magenta");
@@ -1184,6 +1211,8 @@ public class MenuControllerLighty {
                 return languagesManager.getString("cyan");
             case 4:
                 return languagesManager.getString("yellow");
+            case 7:
+                return languagesManager.getString("gray");
         }
     }
 
@@ -1225,7 +1254,7 @@ public class MenuControllerLighty {
         okButton.setShadow(false);
         okButton.setReactBehavior(ReactBehavior.rbChooseGameModeMenu);
         if (yioGdxGame.gameController.completedCampaignLevel(whoWon))
-            okButton.setReactBehavior(ReactBehavior.rbCampaignLevel);
+            okButton.setReactBehavior(ReactBehavior.rbNextLevel);
         okButton.setAnimType(ButtonLighty.ANIM_FROM_CENTER);
 
         ButtonLighty statisticsButton = buttonFactory.getButton(generateRectangle(0.05, 0.4, 0.5, 0.07), 61, languagesManager.getString("statistics"));

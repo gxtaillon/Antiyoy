@@ -4,9 +4,9 @@ package yio.tro.antiyoy.factor_yio;
  * Created by ivan on 21.04.2015.
  */
 public class FactorYio {
-    double f, gravity, dy, speedMultiplier;
-    private MoveBehavior moveBehavior;
     boolean itsTimeToStop;
+    double f, gravity, dy, speedMultiplier;
+    MoveBehavior moveBehavior;
 
 
     public FactorYio() {
@@ -38,27 +38,20 @@ public class FactorYio {
     }
 
 
-    private void setMoveBehaviorByMoveMode(int moveMode) {
-        switch (moveMode) {
-            case 0:
-                moveBehavior = MoveBehavior.moveBehaviorSimple;
-                break;
-            case 1:
-                moveBehavior = MoveBehavior.moveBehaviorLighty;
-                break;
-            case 2:
-                moveBehavior = MoveBehavior.moveBehaviorSpringy;
-                break;
-            case 3:
-                moveBehavior = MoveBehavior.moveBehaviorApproach;
-                break;
-            case 4:
-                moveBehavior = MoveBehavior.moveBehaviorPlayful;
-                break;
+    private MoveBehavior getMoveBehaviorByIndex(int index) {
+        switch (index) {
             default:
-                moveBehavior = MoveBehavior.moveBehaviorLighty;
-                break;
+            case 0: return MoveBehavior.moveBehaviorSimple;
+            case 1: return MoveBehavior.moveBehaviorLighty;
+            case 2: return MoveBehavior.moveBehaviorMaterial;
+            case 3: return MoveBehavior.moveBehaviorApproach;
+            case 4: return MoveBehavior.moveBehaviorPlayful;
         }
+    }
+
+
+    private void setMoveBehaviorByMoveMode(int moveMode) {
+        moveBehavior = getMoveBehaviorByIndex(moveMode);
     }
 
 

@@ -61,6 +61,7 @@ class MapGenerator {
 
     private void balanceMap() {
         if (GameController.colorNumber < 4) return; // to prevent infinite loop
+        if (GameController.colorNumber > 5) return; // too lazy to balance that
         spawnManySmallProvinces();
         cutProvincesToSmallSizes();
         achieveFairNumberOfProvincesForEveryPlayer();

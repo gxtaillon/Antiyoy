@@ -14,6 +14,6 @@ public class RbInputModeHex extends ReactBehavior {
     @Override
     public void reactAction(ButtonLighty buttonLighty) {
         getGameController(buttonLighty).getLevelEditor().setInputMode(LevelEditor.MODE_SET_HEX);
-        getGameController(buttonLighty).getLevelEditor().setInputColor(buttonLighty.id - 153);
+        getGameController(buttonLighty).getLevelEditor().setInputColor(buttonLighty.id - 150);
     }
 }

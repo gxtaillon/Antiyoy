@@ -31,7 +31,7 @@ public class LevelEditor {
 
     private void focusedHexActions(Hex focusedHex) {
         if (focusedHex == null) return;
-        if (randomColor) inputColor = gameController.random.nextInt(GameController.colorNumber);
+        if (randomColor) inputColor = gameController.random.nextInt(gameController.MAX_COLOR_NUMBER);
         switch (inputMode) {
             case MODE_MOVE:
                 inputModeMoveActions(focusedHex);
@@ -83,8 +83,20 @@ public class LevelEditor {
         stringBuffer.append(gameController.difficulty + " ");
         stringBuffer.append(gameController.levelSize + " ");
         stringBuffer.append(gameController.playersNumber + " ");
-        stringBuffer.append(GameController.colorNumber + "");
+        stringBuffer.append(countUpColorNumber() + "");
         return stringBuffer.toString();
+    }
+
+
+    private int countUpColorNumber() {
+        int cn = 0;
+        for (Hex activeHex : gameController.activeHexes) {
+            if (activeHex.colorIndex > cn) {
+                cn = activeHex.colorIndex;
+            }
+        }
+        cn++;
+        return cn;
     }
 
 
@@ -286,7 +298,7 @@ public class LevelEditor {
     public void changeNumberOfPlayers() {
         int numPlayers = gameController.playersNumber;
         numPlayers++;
-        if (numPlayers > GameController.colorNumber) numPlayers = 1;
+        if (numPlayers > GameController.MAX_COLOR_NUMBER) numPlayers = 1;
         gameController.setPlayersNumber(numPlayers);
         gameController.yioGdxGame.menuControllerLighty.showNotification(getLangManager().getString("player_number") + " " + numPlayers, true);
     }
@@ -340,7 +352,7 @@ public class LevelEditor {
     public void setInputColor(int inputColor) {
         this.inputColor = inputColor;
         setRandomColor(false);
-        if (inputColor >= GameController.colorNumber) setRandomColor(true);
+        if (inputColor >= GameController.MAX_COLOR_NUMBER) setRandomColor(true);
     }
 
 

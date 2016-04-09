@@ -84,4 +84,5 @@ public abstract class ReactBehavior {
     public static final RbArticleComplicatedMode rbArticleComplicatedMode = new RbArticleComplicatedMode();
     public static final RbShowColorStats rbShowColorStats = new RbShowColorStats();
     public static final RbHideColorStats rbHideColorStats = new RbHideColorStats();
+    public static final RbNextLevel rbNextLevel = new RbNextLevel();
 }

@@ -18,6 +18,7 @@ public class GameController {
     int w, h, screenX, screenY, touchDownX, touchDownY;
     int maxTouchCount, currentTouchCount, lastTouchCount;
     public static int colorNumber = 5;
+    public static final int MAX_COLOR_NUMBER = 8;
     public static final int SIZE_SMALL = 1;
     public static final int SIZE_MEDIUM = 2;
     public static final int SIZE_BIG = 4;
@@ -1189,6 +1190,13 @@ public class GameController {
 
     public void setCurrentLevelIndex(int currentLevelIndex) {
         this.currentLevelIndex = currentLevelIndex;
+    }
+
+
+    public int getNextLevelIndex() {
+        int nextLevelIndex = currentLevelIndex + 1;
+        if (nextLevelIndex > YioGdxGame.INDEX_OF_LAST_LEVEL) nextLevelIndex = YioGdxGame.INDEX_OF_LAST_LEVEL;
+        return nextLevelIndex;
     }
 
 
