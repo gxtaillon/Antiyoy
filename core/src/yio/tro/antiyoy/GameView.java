@@ -25,7 +25,7 @@ public class GameView {
     private ShapeRenderer shapeRenderer;
     float cx, cy, dw, dh, borderLineThickness;
     TextureRegion blackCircleTexture, redRectTexture, exclamationMarkTexture, forefingerTexture;
-    TextureRegion animationTextureRegion, blackBorderTexture;
+    TextureRegion animationTextureRegion, blackBorderTexture, blackTriangle, greenPixel;
     TextureRegion hexGreen, hexRed, hexBlue, hexYellow, hexCyan, hexColor1, hexColor2, hexColor3;
     float linkLineThickness, hexViewSize, cacheFrameX1, cacheFrameY1, cacheFrameX2, cacheFrameY2, hexShadowSize;
     TextureRegion blackPixel, grayPixel, selectionPixel, shadowHexTexture, gradientShadow, transCircle1, transCircle2, selUnitShadow, currentObjectTexture;
@@ -104,6 +104,8 @@ public class GameView {
         forefingerTexture = loadTextureRegionByName("forefinger.png", true);
         defenseIcon = loadTextureRegionByName("defense_icon.png", true);
         blackBorderTexture = loadTextureRegionByName("pixels/black_border.png", true);
+        blackTriangle = loadTextureRegionByName("triangle.png", false);
+        greenPixel = loadTextureRegionByName("pixels/pixel_green.png", false);
         grayPixel = blackPixel;
     }
 
@@ -584,6 +586,7 @@ public class GameView {
 
     private void renderExclamationMarks() {
         if (!gameController.isPlayerTurn()) return;
+
         for (Province province : gameController.provinces) {
             if (gameController.isCurrentTurn(province.getColor()) && province.money >= GameController.PRICE_UNIT) {
                 Hex capitalHex = province.getCapital();
@@ -591,6 +594,34 @@ public class GameView {
                 batchMovable.draw(exclamationMarkTexture, pos.x - 0.5f * hexViewSize, pos.y + 0.3f * hexViewSize + gameController.jumperUnit.jumpPos * hexViewSize, 0.35f * hexViewSize, 0.6f * hexViewSize);
             }
         }
+    }
+
+
+    private void renderCityNames() {
+        if (!gameController.isShowCityNames()) return;
+        if (!gameController.isPlayerTurn()) return;
+
+        for (Province province : gameController.provinces) {
+            if (gameController.isCurrentTurn(province.getColor()) && province.isSelected()) {
+                renderSingleCityName(province);
+            }
+        }
+    }
+
+
+    private void renderSingleCityName(Province province) {
+        Hex capitalHex = province.getCapital();
+        PointYio pos = capitalHex.getPos();
+        float factor = capitalHex.selectionFactor.get() - gameController.moveZoneFactor.get();
+        float pWidth = province.nameWidth;
+        Color c = batchMovable.getColor();
+        batchMovable.setColor(c.r, c.g, c.b, factor);
+        batchMovable.draw(greenPixel, pos.x - pWidth - 0.05f * hexViewSize, pos.y + 0.55f * hexViewSize + 0.4f * factor * hexViewSize, 2 * pWidth + 0.1f * hexViewSize, 1f * hexViewSize);
+        batchMovable.draw(blackTriangle, pos.x - 0.3f * hexViewSize, pos.y + 0.1f * hexViewSize + 0.3f * factor * hexViewSize, 0.6f * hexViewSize, 0.6f * hexViewSize);
+        batchMovable.setColor(c.r, c.g, c.b, 0.3f + 0.7f * factor);
+        batchMovable.draw(blackPixel, pos.x - pWidth, pos.y + 0.7f * hexViewSize + 0.3f * factor * hexViewSize, 2 * pWidth, 0.9f * hexViewSize);
+        YioGdxGame.cityFont.draw(batchMovable, province.name, pos.x - pWidth + 0.1f * hexViewSize, pos.y + 1.4f * hexViewSize + 0.3f * factor * hexViewSize);
+        batchMovable.setColor(c.r, c.g, c.b, c.a);
     }
 
 
@@ -638,7 +669,7 @@ public class GameView {
     }
 
 
-    private void renderMoveZoneAndSelectedUnit() {
+    private void renderMoveZone() {
         PointYio pos;
         TextureRegion currentHexTexture, currentHexLastTexture;
         Color c = batchMovable.getColor();
@@ -709,9 +740,12 @@ public class GameView {
 //                renderTextOnHex(hex, "" + (int)(10 * hex.animFactor.get()));
             }
         }
-
-        // drawing selected unit
         batchMovable.setColor(c.r, c.g, c.b, c.a);
+    }
+
+
+    private void renderSelectedUnit() {
+        PointYio pos;
         if (gameController.selectedUnit != null) {
             pos = gameController.selectedUnit.currentPos;
             float ar = 0.35f * hexViewSize * gameController.selUnitFactor.get();
@@ -815,7 +849,9 @@ public class GameView {
         if (gameController.moveZoneFactor.get() > 0.01) {
             renderBlackout();
         }
-        renderMoveZoneAndSelectedUnit();
+        renderMoveZone();
+        renderCityNames();
+        renderSelectedUnit();
         renderDefenseTips();
 
         renderDebug();

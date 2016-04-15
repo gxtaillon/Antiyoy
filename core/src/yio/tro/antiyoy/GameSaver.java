@@ -187,6 +187,7 @@ public class GameSaver {
         for (Province province : gameController.provinces) {
             Hex hex = province.hexList.get(0);
             province.money = hex.moveZoneNumber;
+            province.updateName();
         }
     }
 

@@ -36,7 +36,6 @@ public class ButtonLighty {
     public final Color backColor;
     private boolean needToPerformAction;
     private long timeToPerformAction;
-    private Sound pressSound;
     float hor, ver, cx, cy, touchX, touchY, animR;
     float x1, x2, y1, y2;
     private float deltaSizeArgument, deltaSize, touchOffset;
@@ -55,7 +54,6 @@ public class ButtonLighty {
         selAlphaFactor = new FactorYio();
         text = new ArrayList<String>();
         backColor = new Color(0.5f, 0.5f, 0.5f, 1);
-        pressSound = menuControllerLighty.getDefaultSound();
         hasShadow = true;
         mandatoryShadow = false;
         animPos = new SimpleRectangle(0, 0, 0, 0);
@@ -162,11 +160,6 @@ public class ButtonLighty {
     }
 
 
-    public void setPressSound(Sound pressSound) {
-        this.pressSound = pressSound;
-    }
-
-
     public void setTouchable(boolean touchable) {
         this.touchable = touchable;
     }
@@ -199,7 +192,7 @@ public class ButtonLighty {
         if (!touchable) return;
         currentlyTouched = true;
         lastTimeTouched = System.currentTimeMillis();
-        if (YioGdxGame.SOUND) pressSound.play();
+        SoundControllerYio.playPressButton();
         selectionFactor.setValues(0.2, 0.02);
         selectionFactor.beginSpawning(0, 1);
         selAlphaFactor.setValues(1, 0);

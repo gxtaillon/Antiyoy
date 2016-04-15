@@ -3,6 +3,7 @@ package yio.tro.antiyoy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ListIterator;
+import java.util.Random;
 
 /**
  * Created by ivan on 27.05.2015.
@@ -11,8 +12,12 @@ class Province {
 
     int money;
     ArrayList<Hex> hexList, tempList;
-    private final Hex capital;
     private GameController gameController;
+    public String name;
+    public float nameWidth;
+    private static final String partA[] = {"gda", "mi", "ki", "can", "mos", "san"};
+    private static final String partB[] = {"", "", "", "da", "ro", "lo", "ta"};
+    private static final String partC[] = {"nsk", "rra", "ko", "rry"};
 
 
     public Province(GameController gameController, ArrayList<Hex> hexList) {
@@ -20,7 +25,6 @@ class Province {
         this.hexList = new ArrayList<Hex>(hexList);
         tempList = new ArrayList<Hex>();
         money = 10;
-        capital = null;
     }
 
 
@@ -35,6 +39,7 @@ class Province {
         randomPlace.lastColorIndex = randomPlace.colorIndex;
         randomPlace.animFactor.setValues(0, 0);
         randomPlace.animFactor.beginSpawning(1, 2);
+        updateName();
     }
 
 
@@ -125,9 +130,30 @@ class Province {
     }
 
 
+    public void updateName() {
+        StringBuffer stringBuffer = new StringBuffer();
+        Hex capitalHex = getCapital();
+        Random random = new Random(capitalHex.index1 + 3 * capitalHex.index2);
+
+        stringBuffer.append(partA[random.nextInt(partA.length)]);
+        stringBuffer.append(partB[random.nextInt(partB.length)]);
+        stringBuffer.append(partC[random.nextInt(partC.length)]);
+        stringBuffer.setCharAt(0, Character.toUpperCase(stringBuffer.charAt(0)));
+
+        setName(stringBuffer.toString());
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+        nameWidth = 0.5f * YioGdxGame.cityFont.getBounds(name).width + 0.1f * gameController.yioGdxGame.gameView.hexViewSize;
+    }
+
+
     void setCapital(Hex hex) {
         clearFromHouses();
         gameController.addSolidObject(hex, Hex.OBJECT_HOUSE);
+        updateName();
     }
 
 

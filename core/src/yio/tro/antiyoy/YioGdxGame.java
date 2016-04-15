@@ -22,7 +22,7 @@ public class YioGdxGame extends ApplicationAdapter implements InputProcessor {
     int w, h;
     MenuControllerLighty menuControllerLighty;
     private MenuViewLighty menuViewLighty;
-    public static BitmapFont buttonFont, gameFont, listFont;
+    public static BitmapFont buttonFont, gameFont, listFont, cityFont;
     public static final String FONT_CHARACTERS = "йцукенгшщзхъёфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮіІїЇєЄabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<^>";
     public static int FONT_SIZE;
     public static final int INDEX_OF_LAST_LEVEL = 70; // with tutorial
@@ -85,9 +85,17 @@ public class YioGdxGame extends ApplicationAdapter implements InputProcessor {
         screenRatio = (float) w / (float) h;
         frameBuffer = new FrameBuffer(Pixmap.Format.RGB565, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
         screenshotBuffer = new FrameBuffer(Pixmap.Format.RGB565, w, h, true);
-        debugFactorModel = false;
-        debugValues = new ArrayList<Float>();
         balanceIndicator = new int[GameController.colorNumber];
+        initDebugValues();
+        backButtonIds = new ArrayList<Integer>();
+        useMenuMasks = true;
+    }
+
+
+    private void initDebugValues() {
+        debugFactorModel = false;
+
+        debugValues = new ArrayList<Float>();
         if (debugFactorModel) {
             FactorYio factorYio = new FactorYio();
             factorYio.setValues(0, 0);
@@ -99,8 +107,6 @@ public class YioGdxGame extends ApplicationAdapter implements InputProcessor {
                 c--;
             }
         }
-        backButtonIds = new ArrayList<Integer>();
-        useMenuMasks = true;
     }
 
 
@@ -108,53 +114,17 @@ public class YioGdxGame extends ApplicationAdapter implements InputProcessor {
         loadedResources = true;
         gameSettings = new GameSettings(this);
         screenVerySmall = Gdx.graphics.getDensity() < 1.2;
-        FileHandle fontFile = Gdx.files.internal("font.otf");
         mainBackground = GameView.loadTextureRegionByName("main_menu_background.png", true);
         infoBackground = GameView.loadTextureRegionByName("info_background.png", true);
         settingsBackground = GameView.loadTextureRegionByName("settings_background.png", true);
         pauseBackground = GameView.loadTextureRegionByName("pause_background.png", true);
         splatTexture = GameView.loadTextureRegionByName("splat.png", true);
+        SoundControllerYio.loadSounds();
         transitionFactor = new FactorYio();
         splatTransparencyFactor = new FactorYio();
-        splats = new ArrayList<Splat>();
-        splatSize = 0.15f * Gdx.graphics.getWidth();
-        ListIterator iterator = splats.listIterator();
-        for (int i = 0; i < 100; i++) {
-            float sx, sy, sr;
-            sx = random.nextFloat() * w;
-            sr = 0.03f * random.nextFloat() * h + 0.02f * h;
-            sy = random.nextFloat() * h;
-            float dx, dy;
-            dx = 0.02f * splatSize * random.nextFloat() - 0.01f * splatSize;
-            dy = 0.01f * splatSize;
-            Splat splat = new Splat(null, sx, sy);
-            if (random.nextDouble() < 0.6 || distance(w / 2, h / 2, sx, sy) > 0.6f * w) splat.y = 2 * h; // hide splat
-            splat.setSpeed(dx, dy);
-            splat.setRadius(sr);
-            iterator.add(splat);
-//            iterator.add(new Splat(null, 0, 2 * h));
-        }
+        initSplats();
 
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        FONT_SIZE = (int) (0.041 * Gdx.graphics.getHeight());
-
-        parameter.size = FONT_SIZE;
-        parameter.characters = FONT_CHARACTERS;
-        parameter.flip = true;
-        buttonFont = generator.generateFont(parameter);
-
-        parameter.size = (int) (1.5f * FONT_SIZE);
-        parameter.flip = true;
-        listFont = generator.generateFont(parameter);
-        listFont.setColor(Color.BLACK);
-
-        parameter.size = FONT_SIZE;
-        parameter.flip = false;
-        gameFont = generator.generateFont(parameter);
-        gameFont.setColor(Color.BLACK);
-
-        generator.dispose();
+        initFonts();
         gamePaused = true;
         alreadyShownErrorMessageOnce = false;
         showFpsInfo = false;
@@ -186,6 +156,60 @@ public class YioGdxGame extends ApplicationAdapter implements InputProcessor {
     }
 
 
+    private void initFonts() {
+        long time1 = System.currentTimeMillis();
+        FileHandle fontFile = Gdx.files.internal("font.otf");
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(fontFile);
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        FONT_SIZE = (int) (0.041 * Gdx.graphics.getHeight());
+
+        parameter.size = FONT_SIZE;
+        parameter.characters = FONT_CHARACTERS;
+        parameter.flip = true;
+        buttonFont = generator.generateFont(parameter);
+
+        parameter.size = (int) (1.5f * FONT_SIZE);
+        parameter.flip = true;
+        listFont = generator.generateFont(parameter);
+        listFont.setColor(Color.BLACK);
+
+        parameter.size = FONT_SIZE;
+        parameter.flip = false;
+        gameFont = generator.generateFont(parameter);
+        gameFont.setColor(Color.BLACK);
+
+        parameter.size = (int)(0.5 * FONT_SIZE);
+        parameter.flip = false;
+        cityFont = generator.generateFont(parameter);
+        cityFont.setColor(Color.WHITE);
+
+        generator.dispose();
+
+        YioGdxGame.say("time to generate fonts: " + (System.currentTimeMillis() - time1));
+    }
+
+
+    private void initSplats() {
+        splats = new ArrayList<Splat>();
+        splatSize = 0.15f * Gdx.graphics.getWidth();
+        ListIterator iterator = splats.listIterator();
+        for (int i = 0; i < 100; i++) {
+            float sx, sy, sr;
+            sx = random.nextFloat() * w;
+            sr = 0.03f * random.nextFloat() * h + 0.02f * h;
+            sy = random.nextFloat() * h;
+            float dx, dy;
+            dx = 0.02f * splatSize * random.nextFloat() - 0.01f * splatSize;
+            dy = 0.01f * splatSize;
+            Splat splat = new Splat(null, sx, sy);
+            if (random.nextDouble() < 0.6 || distance(w / 2, h / 2, sx, sy) > 0.6f * w) splat.y = 2 * h; // hide splat
+            splat.setSpeed(dx, dy);
+            splat.setRadius(sr);
+            iterator.add(splat);
+        }
+    }
+
+
     public void saveSettings() {
         Preferences prefs = Gdx.app.getPreferences("settings");
         prefs.putInteger("sound", menuControllerLighty.sliders.get(4).getCurrentRunnerIndex());
@@ -194,6 +218,7 @@ public class YioGdxGame extends ApplicationAdapter implements InputProcessor {
         prefs.putInteger("autosave", menuControllerLighty.sliders.get(7).getCurrentRunnerIndex());
         prefs.putInteger("ask_to_end_turn", menuControllerLighty.sliders.get(8).getCurrentRunnerIndex());
         prefs.putInteger("anim_style", menuControllerLighty.sliders.get(9).getCurrentRunnerIndex());
+        prefs.putInteger("city_names", menuControllerLighty.sliders.get(10).getCurrentRunnerIndex());
         prefs.flush();
     }
 
@@ -201,33 +226,44 @@ public class YioGdxGame extends ApplicationAdapter implements InputProcessor {
     public void loadSettings() {
         Preferences prefs = Gdx.app.getPreferences("settings");
 
+        // sound
         int soundIndex = prefs.getInteger("sound");
         if (soundIndex == 0) SOUND = false;
         else SOUND = true;
         menuControllerLighty.sliders.get(4).setRunnerValue(soundIndex);
 
+        // skin
         int skin = prefs.getInteger("skin");
         gameView.loadSkin(skin);
         float slSkinValue = (float) skin / 2f;
         menuControllerLighty.sliders.get(5).setRunnerValue(slSkinValue);
 
+        // interface
         interface_type = prefs.getInteger("interface");
         menuControllerLighty.sliders.get(6).setRunnerValue(interface_type);
 
+        // autosave
         int AS = prefs.getInteger("autosave");
         autosave = false;
         if (AS == 1) autosave = true;
         menuControllerLighty.sliders.get(7).setRunnerValue(AS);
 
+        // animations style
         menuControllerLighty.anim_style = prefs.getInteger("anim_style", 2);
         menuControllerLighty.sliders.get(9).setRunnerValue(MenuControllerLighty.anim_style / 3f);
         menuControllerLighty.applyAnimStyle();
 
+        // ask to end turn
         int ATET = prefs.getInteger("ask_to_end_turn");
         ask_to_end_turn = (ATET == 1);
         menuControllerLighty.sliders.get(8).setRunnerValue(ATET);
 
-        for (int i = 4; i <= 9; i++) {
+        // show city names
+        int cityNames = prefs.getInteger("city_names", 0);
+        gameController.setShowCityNames(cityNames);
+        menuControllerLighty.sliders.get(10).setRunnerValue(cityNames);
+
+        for (int i = 4; i <= 10; i++) {
             menuControllerLighty.sliders.get(i).updateValueString();
         }
     }

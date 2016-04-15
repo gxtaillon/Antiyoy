@@ -52,7 +52,7 @@ public class GameController {
     float cos60, sin60, selectX, selectY, deltaMovementFactor, boundWidth, boundHeight;
     Hex focusedHex, emptyHex, responseAnimHex, defTipHex;
     boolean readyToEndTurn, blockDragToRight, blockDragToLeft, blockDragToUp, blockDragToDown, backgroundVisible;
-    private boolean proposedSurrender;
+    private boolean proposedSurrender, showCityNames;
     private ArrayList<ArtificialIntelligence> aiList;
     ArrayList<Hex> solidObjects, moveZone, defenseTips;
     ArrayList<Unit> unitList;
@@ -206,51 +206,17 @@ public class GameController {
 
     public void move() {
         currentTime = System.currentTimeMillis();
-        if (!isPlayerTurn() && !readyToEndTurn) {
-            aiList.get(turn).makeMove();
-            updateCacheOnceAfterSomeTime();
-            readyToEndTurn = true;
-        }
-
+        checkForAiToMove();
         checkToEndTurn();
-
-        if (letsUpdateCacheByAnim && currentTime > timeToUpdateCache && (isPlayerTurn() || isCurrentTurn(0)) && !isSomethingMoving()) {
-            letsUpdateCacheByAnim = false;
-            if (updateWholeCache) yioGdxGame.gameView.updateCacheLevelTextures();
-            else yioGdxGame.gameView.updateCacheNearAnimHexes();
-            updateWholeCache = false;
-        }
+        checkToUpdateCacheByAnim();
 
         if (letsCheckAnimHexes && currentTime > timeToCheckAnimHexes && (isPlayerTurn() || isCurrentTurn(0)))
             checkAnimHexes();
 
-        if (checkToMarch && currentTouchCount == 1 && currentTime - touchDownTime > marchDelay && touchedAsClick()) {
-            checkToMarch = false;
-            updateFocusedHex();
-            if (focusedHex.active) {
-                marchUnitsToHex(focusedHex);
-            }
-        }
-
-        for (Unit unit : unitList) {
-            unit.moveJumpAnim();
-            unit.move();
-        }
-
-        for (Hex hex : animHexes) {
-            if (!hex.selected) hex.move(); // to prevent double call of move()
-            if (!letsCheckAnimHexes && hex.animFactor.get() > 0.99) {
-                letsCheckAnimHexes = true;
-            }
-
-            // animation is off because it's buggy
-            if (hex.animFactor.get() < 1) hex.animFactor.setValues(1, 0);
-        }
-
-        for (Hex hex : selectedHexes) hex.move();
-        if (selectedUnit != null && selUnitFactor.needsToMove()) {
-            selUnitFactor.move();
-        }
+        moveCheckToMarch();
+        moveUnits();
+        moveAnimHexes();
+        moveSelections();
 
         jumperUnit.moveJumpAnim();
         moveZoneFactor.move();
@@ -260,16 +226,83 @@ public class GameController {
         if (moveZone.size() > 0 && moveZoneFactor.get() < 0.01) clearMoveZone();
         tipFactor.move();
 
+        moveResponseAnimHex();
+        cameraMovement();
+        moveTutorialStuff();
+    }
+
+
+    private void moveTutorialStuff() {
+        if (tutorialMode) {
+            forefinger.move();
+            tutorialScript.move();
+        }
+    }
+
+
+    private void moveResponseAnimHex() {
         if (responseAnimHex != null) {
             responseAnimFactor.move();
             if (responseAnimFactor.get() < 0.01) responseAnimHex = null;
         }
+    }
 
-        cameraMovement();
 
-        if (tutorialMode) {
-            forefinger.move();
-            tutorialScript.move();
+    private void checkForAiToMove() {
+        if (!isPlayerTurn() && !readyToEndTurn) {
+            aiList.get(turn).makeMove();
+            updateCacheOnceAfterSomeTime();
+            readyToEndTurn = true;
+        }
+    }
+
+
+    private void moveSelections() {
+        for (Hex hex : selectedHexes) hex.move();
+        if (selectedUnit != null && selUnitFactor.needsToMove()) {
+            selUnitFactor.move();
+        }
+    }
+
+
+    private void moveAnimHexes() {
+        for (Hex hex : animHexes) {
+            if (!hex.selected) hex.move(); // to prevent double call of move()
+            if (!letsCheckAnimHexes && hex.animFactor.get() > 0.99) {
+                letsCheckAnimHexes = true;
+            }
+
+            // animation is off because it's buggy
+            if (hex.animFactor.get() < 1) hex.animFactor.setValues(1, 0);
+        }
+    }
+
+
+    private void moveUnits() {
+        for (Unit unit : unitList) {
+            unit.moveJumpAnim();
+            unit.move();
+        }
+    }
+
+
+    private void moveCheckToMarch() {
+        if (checkToMarch && currentTouchCount == 1 && currentTime - touchDownTime > marchDelay && touchedAsClick()) {
+            checkToMarch = false;
+            updateFocusedHex();
+            if (focusedHex.active) {
+                marchUnitsToHex(focusedHex);
+            }
+        }
+    }
+
+
+    private void checkToUpdateCacheByAnim() {
+        if (letsUpdateCacheByAnim && currentTime > timeToUpdateCache && (isPlayerTurn() || isCurrentTurn(0)) && !isSomethingMoving()) {
+            letsUpdateCacheByAnim = false;
+            if (updateWholeCache) yioGdxGame.gameView.updateCacheLevelTextures();
+            else yioGdxGame.gameView.updateCacheNearAnimHexes();
+            updateWholeCache = false;
         }
     }
 
@@ -1038,6 +1071,20 @@ public class GameController {
 
     public boolean isSomethingSelected() {
         return selectedHexes.size() > 0;
+    }
+
+
+    public boolean isShowCityNames() {
+        return showCityNames;
+    }
+
+
+    public void setShowCityNames(int cityNames) {
+        if (cityNames == 1) {
+            showCityNames = true;
+        } else {
+            showCityNames = false;
+        }
     }
 
 

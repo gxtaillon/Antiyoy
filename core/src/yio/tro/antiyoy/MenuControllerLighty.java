@@ -27,7 +27,6 @@ public class MenuControllerLighty {
     private final ButtonFactory buttonFactory;
     private ButtonRenderer buttonRenderer;
     public LanguagesManager languagesManager;
-    private Sound soundMenuButton;
     TextureRegion unlockedLevelIcon, lockedLevelIcon, openedLevelIcon;
     public ScrollerYio scrollerYio;
     FactorYio infoPanelFactor;
@@ -42,7 +41,6 @@ public class MenuControllerLighty {
         buttonRenderer = new ButtonRenderer();
         infoPanelFactor = new FactorYio();
         languagesManager = LanguagesManager.getInstance();
-        soundMenuButton = Gdx.audio.newSound(Gdx.files.internal("sound/menu_button.ogg"));
         unlockedLevelIcon = GameView.loadTextureRegionByName("unlocked_level_icon.png", true);
         lockedLevelIcon = GameView.loadTextureRegionByName("locked_level_icon.png", true);
         openedLevelIcon = GameView.loadTextureRegionByName("opened_level_icon.png", true);
@@ -56,7 +54,7 @@ public class MenuControllerLighty {
 
     private void initSliders() {
         sliders = new ArrayList<SliderYio>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 11; i++) {
             SliderYio sliderYio = new SliderYio(this);
             sliderYio.index = i;
             sliders.add(sliderYio);
@@ -72,12 +70,15 @@ public class MenuControllerLighty {
         sliders.get(6).setValues(0, 0, 1, true, SliderYio.CONFIGURE_SLOT_NUMBER); // slot number
         sliders.get(7).setValues(0, 0, 1, false, SliderYio.CONFIGURE_ON_OFF); // autosave
         sliders.get(8).setValues(0, 0, 1, true, SliderYio.CONFIGURE_ASK_END_TURN); // ask to end turn
-        sliders.get(9).setValues(0.75, 0, 3, true, SliderYio.CONFIGURE_ANIM_STYLE); // animation style
+        sliders.get(9).setValues(0.75, 0, 3, false, SliderYio.CONFIGURE_ANIM_STYLE); // animation style
+        sliders.get(10).setValues(0, 0, 1, false, SliderYio.CONFIGURE_ON_OFF); // city names
     }
 
 
     private void initScroller() {
-        scrollerYio = new ScrollerYio(yioGdxGame, generateRectangle(0.05, 0.05, 0.9, 0.8), 0.1f * Gdx.graphics.getHeight(), yioGdxGame.batch);
+        long timeStart = System.currentTimeMillis();
+
+        scrollerYio = new ScrollerYio(yioGdxGame, generateRectangle(0.05, 0.05, 0.9, 0.8), 0.09f * Gdx.graphics.getHeight(), yioGdxGame.batch);
 //        if (scrollerYio.selectionIndex == 0) scrollerYio.addLine(unlockedLevelIcon, languagesManager.getString("how_to_play"));
 //        else scrollerYio.addLine(openedLevelIcon, languagesManager.getString("how_to_play"));
         scrollerYio.addLine(openedLevelIcon, languagesManager.getString("how_to_play"));
@@ -96,11 +97,8 @@ public class MenuControllerLighty {
             scrollerYio.pos = (scrollerYio.selectionIndex - 1) * scrollerYio.lineHeight - 0.5f * scrollerYio.lineHeight;
             scrollerYio.limit();
         }
-    }
 
-
-    Sound getDefaultSound() {
-        return soundMenuButton;
+        YioGdxGame.say("init scroller: " + (System.currentTimeMillis() - timeStart));
     }
 
 
@@ -361,12 +359,21 @@ public class MenuControllerLighty {
         ButtonLighty animStyleButton = buttonFactory.getButton(generateRectangle(0.1, 0.25, 0.8, 0.2), 313, null);
         renderTextAndSomeEmptyLines(animStyleButton, languagesManager.getString("anim_style"), 2);
         animStyleButton.setTouchable(false);
-        animStyleButton.setAnimType(ButtonLighty.ANIM_UP);
+        animStyleButton.setAnimType(ButtonLighty.ANIM_DOWN);
         sliders.get(9).appear();
         sliders.get(9).setPos(0.15, 0.31, 0.7, 0);
         sliders.get(9).setVerticalTouchOffset(0.06f * Gdx.graphics.getHeight());
 
-        for (int i = 311; i <= 313; i++) {
+        ButtonLighty provinceNameButton = buttonFactory.getButton(generateRectangle(0.1, 0.04, 0.8, 0.2), 314, null);
+        renderTextAndSomeEmptyLines(provinceNameButton, languagesManager.getString("city_names"), 2);
+        provinceNameButton.setTouchable(false);
+        provinceNameButton.setAnimType(ButtonLighty.ANIM_DOWN);
+        sliders.get(10).appear();
+        sliders.get(10).setPos(0.15, 0.1, 0.7, 0);
+        sliders.get(10).setVerticalTouchOffset(0.06f * Gdx.graphics.getHeight());
+
+
+        for (int i = 311; i <= 314; i++) {
             getButtonById(i).factorModel.beginSpawning(2, 1.5);
         }
 
