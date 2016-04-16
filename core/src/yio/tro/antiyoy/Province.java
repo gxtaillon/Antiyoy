@@ -130,6 +130,12 @@ class Province {
     }
 
 
+    public String getName() {
+        if (name == null) return " --- ";
+        return name;
+    }
+
+
     public void updateName() {
         StringBuffer stringBuffer = new StringBuffer();
         Hex capitalHex = getCapital();

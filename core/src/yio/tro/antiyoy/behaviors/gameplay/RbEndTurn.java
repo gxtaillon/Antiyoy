@@ -19,7 +19,6 @@ public class RbEndTurn extends ReactBehavior {
                 buttonLighty.menuControllerLighty.createConfirmEndTurnMenu();
             }
         } else {
-            buttonLighty.menuControllerLighty.hideConfirmEndTurnMenu();
             getGameController(buttonLighty).endTurnButtonPressed();
         }
     }

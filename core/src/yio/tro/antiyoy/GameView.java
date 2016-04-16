@@ -617,10 +617,10 @@ public class GameView {
         Color c = batchMovable.getColor();
         batchMovable.setColor(c.r, c.g, c.b, factor);
         batchMovable.draw(greenPixel, pos.x - pWidth - 0.05f * hexViewSize, pos.y + 0.55f * hexViewSize + 0.4f * factor * hexViewSize, 2 * pWidth + 0.1f * hexViewSize, 1f * hexViewSize);
-        batchMovable.draw(blackTriangle, pos.x - 0.3f * hexViewSize, pos.y + 0.1f * hexViewSize + 0.3f * factor * hexViewSize, 0.6f * hexViewSize, 0.6f * hexViewSize);
+        batchMovable.draw(blackTriangle, pos.x - 0.3f * hexViewSize, pos.y + 0.22f * hexViewSize + 0.2f * factor * hexViewSize, 0.6f * hexViewSize, 0.6f * hexViewSize);
         batchMovable.setColor(c.r, c.g, c.b, 0.3f + 0.7f * factor);
         batchMovable.draw(blackPixel, pos.x - pWidth, pos.y + 0.7f * hexViewSize + 0.3f * factor * hexViewSize, 2 * pWidth, 0.9f * hexViewSize);
-        YioGdxGame.cityFont.draw(batchMovable, province.name, pos.x - pWidth + 0.1f * hexViewSize, pos.y + 1.4f * hexViewSize + 0.3f * factor * hexViewSize);
+        YioGdxGame.cityFont.draw(batchMovable, province.getName(), pos.x - pWidth + 0.1f * hexViewSize, pos.y + 1.4f * hexViewSize + 0.3f * factor * hexViewSize);
         batchMovable.setColor(c.r, c.g, c.b, c.a);
     }
 

@@ -117,6 +117,7 @@ class LevelSnapshot {
         for (Province copy : provincesCopy) {
             Province province = gameController.getProvinceByHex(getHexByCopy(copy.hexList.get(0)));
             province.money = copy.money;
+            province.updateName();
         }
 
         gameController.deselectAll();
